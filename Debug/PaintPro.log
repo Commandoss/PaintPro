@@ -1,0 +1,6 @@
+﻿  PaintPro.cpp
+D:\PaintPro\PaintPro\PaintPro.cpp(210,21): error C2065: ID_OPTION: необъявленный идентификатор
+D:\PaintPro\PaintPro\PaintPro.cpp(216,21): error C2065: ID_CALCOUT: необъявленный идентификатор
+D:\PaintPro\PaintPro\PaintPro.cpp(222,21): error C2065: ID_CALCIN: необъявленный идентификатор
+D:\PaintPro\PaintPro\PaintPro.cpp(238,112): error C2065: ID_BTNS: необъявленный идентификатор
+D:\PaintPro\PaintPro\PaintPro.cpp(238,121): error C2059: синтаксическая ошибка: ,
