@@ -34,5 +34,5 @@ const int key_id_expand = 27;
 const int key_id_about = 28;
 
 //icon application 
-const std::wstring application_path_icon= L"appicon.ico";
-const std::wstring application_path_icon_small = L"appicon.ico";
+const std::wstring application_path_icon= L"IMG/appicon.ico";
+const std::wstring application_path_icon_small = L"IMG/appicon.ico";
