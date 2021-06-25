@@ -140,6 +140,46 @@ void cApp::Create_Menu_Bar()
 	SetMenu(this->m_hWnd, hMenuBar);
 }
 
+void cApp::create_native_controls() {
+	using std::wstring;
+	using std::string;
+
+	try
+	{
+		this->Create_Menu_Bar();
+		this->create_toolbar();
+		this->create_accel_table();
+	}
+	catch (const std::exception & e)
+	{
+		string exp_data = e.what();
+
+		MessageBox(NULL, wstring(begin(exp_data), end(exp_data)).c_str(), (L"Error"), MB_ICONERROR | MB_OK);
+		ExitProcess(EXIT_FAILURE);
+	}
+
+
+	//if (this->m_hWndButton = CreateWindowEx(); this->m_hWndButton)
+}
+
+
+void cApp::create_accel_table() {
+	RegisterHotKey(this->m_hWnd, key_id_close, MOD_CONTROL, 0x4E);
+	RegisterHotKey(this->m_hWnd, key_id_exit, MOD_CONTROL, 0x51);
+	RegisterHotKey(this->m_hWnd, key_id_create, MOD_CONTROL, 0x43);
+	RegisterHotKey(this->m_hWnd, key_id_open, MOD_CONTROL, 0x4f);
+	RegisterHotKey(this->m_hWnd, key_id_save, MOD_CONTROL, 0x53);
+	RegisterHotKey(this->m_hWnd, key_id_save_as, MOD_CONTROL, 0x41);
+	RegisterHotKey(this->m_hWnd, key_id_cut, MOD_CONTROL, 0x58);
+	RegisterHotKey(this->m_hWnd, key_id_insert, MOD_CONTROL, 0x56);
+	RegisterHotKey(this->m_hWnd, key_id_copy, MOD_CONTROL, 0x43);
+	RegisterHotKey(this->m_hWnd, key_id_undo, MOD_CONTROL, 0x5a);
+	RegisterHotKey(this->m_hWnd, key_id_return, MOD_CONTROL, 0x55);
+	RegisterHotKey(this->m_hWnd, key_id_roll_up, MOD_ALT, 0x51);
+	RegisterHotKey(this->m_hWnd, key_id_expand, MOD_ALT, 0x57);
+	RegisterHotKey(this->m_hWnd, key_id_about, MOD_ALT, 0x49);
+}
+
 void cApp::create_toolbar() {
 	using std::runtime_error;
 	using namespace std::string_literals;
@@ -200,7 +240,7 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 		break;
 		case menu_id_about:
 		{
-			MessageBox(hWnd, L"PaintPro\nVersion: 1.0\nCreator: Belousov Ilya.", L"About", MB_ICONINFORMATION | MB_OK);
+			this->about();
 		}
 		break;
 		case menu_id_create:
@@ -267,6 +307,84 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	}
 	return 0;
 
+	case WM_HOTKEY:
+	{
+		switch (LOWORD(wParam))
+		{
+		case key_id_close:
+		{
+
+		}
+		break;
+		case key_id_exit:
+		{
+			PostQuitMessage(EXIT_FAILURE);
+		}
+		break;
+		case key_id_create:
+		{
+
+		}
+		break;
+		case key_id_open:
+		{
+
+		}
+		break;
+		case key_id_save:
+		{
+
+		}
+		break;
+		case key_id_save_as:
+		{
+
+		}
+		break;
+		case key_id_cut:
+		{
+
+		}
+		break;
+		case key_id_insert:
+		{
+
+		}
+		break;
+		case key_id_copy:
+		{
+
+		}
+		break;
+		case key_id_undo:
+		{
+
+		}
+		break;
+		case key_id_return:
+		{
+
+		}
+		break;
+		case key_id_roll_up:
+		{
+			SendMessage(hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		}
+		break;
+		case key_id_expand:
+		{
+			SendMessage(hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+		}
+		break;
+		case key_id_about:
+		{
+			this->about();
+		}
+		break;
+		}
+	}
+	return 0;
+
 	case WM_SIZE:
 	{
 
@@ -304,24 +422,9 @@ LRESULT CALLBACK cApp::toolbar_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-void cApp::create_native_controls() {
-	using std::wstring;
-	using std::string;
 
-	try
-	{
-		this->Create_Menu_Bar();
-		this->create_toolbar();
-	}
-	catch (const std::exception & e)
-	{
-		string exp_data = e.what();
-
-		MessageBox(NULL, wstring(begin(exp_data), end(exp_data)).c_str(), (L"Error"), MB_ICONERROR | MB_OK);
-		ExitProcess(EXIT_FAILURE);
-	}
-
-
-	//if (this->m_hWndButton = CreateWindowEx(); this->m_hWndButton)
+void cApp::about() {
+	MessageBox(this->m_hWnd, L"PaintPro\nVersion: 1.0\nCreator: Belousov Ilya.", L"About", MB_ICONINFORMATION | MB_OK);
 }
+
 

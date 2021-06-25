@@ -33,10 +33,14 @@ private:
 
 	void create_toolbar_button();
 
+	void create_accel_table();
+
 	static LRESULT CALLBACK application_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT CALLBACK window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	void create_native_controls();
+
+	void about();
 
 private:
 	const std::wstring m_szAppName{ L"DrawPaint" }, m_szClassName{ L"MainWindow" };
