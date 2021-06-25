@@ -163,30 +163,33 @@ void cApp::create_toolbar() {
 
 	const std::wstring m_szClassNameChl{ L"ToolbarWindow" };
 
-	UnregisterClass(m_szClassNameChl.c_str(), GetModuleHandle(nullptr));
-	WNDCLASSEX wc{ sizeof(WNDCLASSEX) };
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
-	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
-	wc.lpszClassName = m_szClassNameChl.c_str();
-	wc.lpfnWndProc = nullptr;
-	wc.style = CS_VREDRAW | CS_HREDRAW;
+	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
+	_wc.cbClsExtra = 0;
+	_wc.cbWndExtra = 0;
+	_wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(GRAY_BRUSH));
+	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hInstance = GetModuleHandle(nullptr);
+	_wc.lpfnWndProc = cApp::application_proc;
+	_wc.lpszClassName = m_szClassNameChl.c_str();
+	_wc.lpszMenuName = nullptr;
+	_wc.style = CS_VREDRAW | CS_HREDRAW;
 	
+	if (!RegisterClassEx(&_wc))
+		throw runtime_error("Error, can't register main window class!"s);
 	
 
 	this->m_hWndToolbar = CreateWindowEx (
 		0,
-		WC_BUTTON,
-		L"Child",
-		WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE ,
-		12,
-		55,
-		200, 
-		200, 
-		this->m_hWnd, reinterpret_cast<HMENU>(cApp::CTL_ID::RESULTEDID_ID), GetModuleHandle(nullptr), nullptr);
+		m_szClassNameChl.c_str(),
+		nullptr,
+		WS_CHILD | WS_BORDER | WS_VISIBLE,
+		0,
+		0,
+		1280, 
+		50, 
+		this->m_hWnd, nullptr, GetModuleHandle(nullptr), nullptr);
 
 	//WNDCLASS w;
 	//memset(&w, 0, sizeof(WNDCLASS));
