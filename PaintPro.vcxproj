@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="cApp.h" />
     <ClInclude Include="cButton.h" />
+    <ClInclude Include="ID.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

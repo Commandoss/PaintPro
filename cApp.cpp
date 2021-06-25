@@ -106,39 +106,37 @@ void cApp::Create_Menu_Bar()
 	AppendMenu(hMenuBar, MF_POPUP, (UINT_PTR)hhelp, L"Help");
 
 	//HFILE
-	AppendMenu(hfile, MF_STRING, NULL, L"Create");
+	AppendMenu(hfile, MF_STRING, menu_id_create, L"Create");
 	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, NULL, L"Open");
+	AppendMenu(hfile, MF_STRING, menu_id_open, L"Open");
 	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, NULL, L"Save");
+	AppendMenu(hfile, MF_STRING, menu_id_save, L"Save");
 	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, NULL, L"Save as..");
+	AppendMenu(hfile, MF_STRING, menu_id_save_as, L"Save as..");
 	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, NULL, L"Exit");
+	AppendMenu(hfile, MF_STRING, menu_id_exit, L"Exit");
 
 	//HEDIT
-	AppendMenu(hedit, MF_STRING, NULL, L"Cut");
+	AppendMenu(hedit, MF_STRING, menu_id_cut, L"Cut");
 	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, NULL, L"Insert");
+	AppendMenu(hedit, MF_STRING, menu_id_insert, L"Insert");
 	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, NULL, L"Copy");
+	AppendMenu(hedit, MF_STRING, menu_id_copy, L"Copy");
 	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, NULL, L"Undo");
+	AppendMenu(hedit, MF_STRING, menu_id_undo, L"Undo");
 	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, NULL, L"Return");
-	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
+	AppendMenu(hedit, MF_STRING, menu_id_return, L"Return");
 
 	//HWINDOW
-	AppendMenu(hwindow, MF_STRING, NULL, L"Close");
+	AppendMenu(hwindow, MF_STRING, menu_id_close, L"Close");
 	AppendMenu(hwindow, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hwindow, MF_STRING, NULL, L"Roll up");
+	AppendMenu(hwindow, MF_STRING, menu_id_roll_up, L"Roll up");
 	AppendMenu(hwindow, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hwindow, MF_STRING, NULL, L"Expand");
-	AppendMenu(hwindow, MF_SEPARATOR, NULL, NULL);
+	AppendMenu(hwindow, MF_STRING, menu_id_expand, L"Expand");
 
 
 	//HHELP 
-	AppendMenu(hhelp, MF_STRING, NULL, L"About");
+	AppendMenu(hhelp, MF_STRING, menu_id_about, L"About");
 	SetMenu(this->m_hWnd, hMenuBar);
 }
 
@@ -182,12 +180,84 @@ void cApp::create_toolbar_button() {
 }
 
 LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	using std::wstring;
+	using std::string;
 	switch (uMsg)
 	{
 	case WM_COMMAND:
 	{
-		switch (static_cast<cApp::CTL_ID>(LOWORD(wParam)))
+		switch (LOWORD(wParam))
 		{
+		case menu_id_close:
+		{
+
+		}
+		break;
+		case menu_id_exit:
+		{
+			PostQuitMessage(EXIT_FAILURE);
+		}
+		break;
+		case menu_id_about:
+		{
+			MessageBox(hWnd, L"PaintPro\nVersion: 1.0\nCreator: Belousov Ilya.", L"About", MB_ICONINFORMATION | MB_OK);
+		}
+		break;
+		case menu_id_create:
+		{
+
+		}
+		break;
+		case menu_id_open:
+		{
+
+		}
+		break;
+		case menu_id_save:
+		{
+
+		}
+		break;
+		case menu_id_save_as:
+		{
+
+		}
+		break;
+		case menu_id_cut:
+		{
+
+		}
+		break;
+		case menu_id_insert:
+		{
+
+		}
+		break;
+		case menu_id_copy:
+		{
+
+		}
+		break;
+		case menu_id_undo:
+		{
+
+		}
+		break;
+		case menu_id_return:
+		{
+
+		}
+		break;
+		case menu_id_roll_up:
+		{
+
+		}
+		break;
+		case menu_id_expand:
+		{
+
+		}
+		break;
 		case cApp::CTL_ID::CALCBUTTON_ID:
 		{
 
