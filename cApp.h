@@ -6,6 +6,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include <Windows.h>
 
 #include <string>
+#include <CommCtrl.h>
 //#include <algorithm>
 #include <stdexcept>
 

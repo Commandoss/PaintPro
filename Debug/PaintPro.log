@@ -1,5 +1,5 @@
-﻿  cApp.cpp
-  PaintPro.cpp
+﻿  PaintPro.cpp
+  cApp.cpp
   Создание кода...
 D:\PaintPro\PaintPro\cApp.cpp(73,8): warning C4101: pApp: неиспользованная локальная переменная
   PaintPro.vcxproj -> D:\PaintPro\Debug\PaintPro.exe

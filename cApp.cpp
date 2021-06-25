@@ -161,21 +161,54 @@ void cApp::create_toolbar() {
 	using std::runtime_error;
 	using namespace std::string_literals;
 
-	m_hWndToolbar = CreateWindowEx(
+	const std::wstring m_szClassNameChl{ L"ToolbarWindow" };
+
+	UnregisterClass(m_szClassNameChl.c_str(), GetModuleHandle(nullptr));
+	WNDCLASSEX wc{ sizeof(WNDCLASSEX) };
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
+	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+	wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+	wc.lpszClassName = m_szClassNameChl.c_str();
+	wc.lpfnWndProc = nullptr;
+	wc.style = CS_VREDRAW | CS_HREDRAW;
+	
+	
+
+	this->m_hWndToolbar = CreateWindowEx (
 		0,
-		L"cToolbar",
-		L"Toolbar",
-		WS_BORDER | WS_VISIBLE | WS_MAXIMIZE,
-		0,
-		0,
-		200, 200, this->m_hWnd, nullptr, nullptr, this);
+		WC_BUTTON,
+		L"Child",
+		WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE ,
+		12,
+		55,
+		200, 
+		200, 
+		this->m_hWnd, reinterpret_cast<HMENU>(cApp::CTL_ID::RESULTEDID_ID), GetModuleHandle(nullptr), nullptr);
+
+	//WNDCLASS w;
+	//memset(&w, 0, sizeof(WNDCLASS));
+	//w.lpfnWndProc = ChildProc;
+	//w.hInstance = hinst;
+	//w.hbrBackground = GetStockBrush(WHITE_BRUSH);
+	//w.lpszClassName = "ChildWClass";
+	//w.hCursor = LoadCursor(NULL, IDC_CROSS);
+	//RegisterClass(&w);
+	//HWND child;
+	//child = CreateWindowEx(0, "ChildWClass", (LPCTSTR)NULL,
+	//	WS_CHILD | WS_BORDER | WS_VISIBLE, i * 10, i * 10,
+	//	50, 50, hwnd, (HMENU)(int)(ID_FIRSTCHILD + i), hinst, NULL);
+
 	if (!this->m_hWndToolbar)
-		throw runtime_error("Error, can't create main window!"s);
+		throw runtime_error("Error, can't Toolbar!"s);
+	//UpdateWindow(this->m_hWnd);
+	//SetParent(hwnd, hwndparent);
+	//ShowWindow(hwnd, SW_SHOWNORMAL);
 }
 
 void cApp::create_native_controls() {
-	using std::runtime_error;
-	using namespace std::string_literals;
 	using std::wstring;
 	using std::string;
 

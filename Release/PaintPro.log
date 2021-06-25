@@ -1,0 +1,8 @@
+﻿  cApp.cpp
+  PaintPro.cpp
+D:\PaintPro\PaintPro\cApp.cpp(73,8): warning C4101: pApp: неиспользованная локальная переменная
+  Создание кода
+  Previous IPDB not found, fall back to full compilation.
+  All 153 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Создание кода завершено
+  PaintPro.vcxproj -> D:\PaintPro\Release\PaintPro.exe
