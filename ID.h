@@ -1,4 +1,6 @@
 #pragma once
+#include <Windows.h>
+#include "resource.h"
 // menu application id
 const int menu_id_close = 1;
 const int menu_id_exit = 2;
@@ -31,19 +33,6 @@ const int key_id_roll_up = 26;
 const int key_id_expand = 27;
 const int key_id_about = 28;
 
-//void cApp::create_accel_table() {
-//	RegisterHotKey(this->m_hWnd, key_id_close, MOD_CONTROL, 0x4E);
-//	RegisterHotKey(this->m_hWnd, key_id_exit, MOD_CONTROL, 0x51);
-//	RegisterHotKey(this->m_hWnd, key_id_create, MOD_CONTROL, 0x43);
-//	RegisterHotKey(this->m_hWnd, key_id_open, MOD_CONTROL, 0x4f);
-//	RegisterHotKey(this->m_hWnd, key_id_save, MOD_CONTROL, 0x53);
-//	RegisterHotKey(this->m_hWnd, key_id_save_as, MOD_CONTROL, 0x41);
-//	RegisterHotKey(this->m_hWnd, key_id_cut, MOD_CONTROL, 0x58);
-//	RegisterHotKey(this->m_hWnd, key_id_insert, MOD_CONTROL, 0x56);
-//	RegisterHotKey(this->m_hWnd, key_id_copy, MOD_CONTROL, 0x43);
-//	RegisterHotKey(this->m_hWnd, key_id_undo, MOD_CONTROL, 0x5a);
-//	RegisterHotKey(this->m_hWnd, key_id_return, MOD_CONTROL, 0x55);
-//	RegisterHotKey(this->m_hWnd, key_id_roll_up, MOD_ALT, 0x51);
-//	RegisterHotKey(this->m_hWnd, key_id_expand, MOD_ALT, 0x57);
-//	RegisterHotKey(this->m_hWnd, key_id_about, MOD_ALT, 0x49);
-//}
+//icon application 
+const std::wstring application_path_icon= L"appicon.ico";
+const std::wstring application_path_icon_small = L"appicon.ico";

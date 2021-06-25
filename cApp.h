@@ -11,6 +11,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include <stdexcept>
 #include "ID.h"
 
+
 class cApp
 {
 	enum CTL_ID {

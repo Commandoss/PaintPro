@@ -42,8 +42,8 @@ void cApp::init_native_window_obj() {
 	_wc.cbWndExtra = 0;
 	_wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hIcon = (HICON)LoadImage(NULL, (application_path_icon.c_str()), IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
+	_wc.hIconSm = (HICON)LoadImage(NULL, (application_path_icon_small.c_str()), IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
 	_wc.hInstance = GetModuleHandle(nullptr);
 	_wc.lpfnWndProc = cApp::application_proc;
 	_wc.lpszClassName = this->m_szClassName.c_str();
