@@ -106,37 +106,37 @@ void cApp::Create_Menu_Bar()
 	AppendMenu(hMenuBar, MF_POPUP, (UINT_PTR)hhelp, L"Help");
 
 	//HFILE
-	AppendMenu(hfile, MF_STRING, menu_id_create, L"Create");
+	AppendMenu(hfile, MF_STRING, menu_id_create, L"Create\tCtrl+N");
 	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, menu_id_open, L"Open");
+	AppendMenu(hfile, MF_STRING, menu_id_open, L"Open\tCtrl+O");
 	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, menu_id_save, L"Save");
+	AppendMenu(hfile, MF_STRING, menu_id_save, L"Save\tCtrl+S");
 	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, menu_id_save_as, L"Save as..");
+	AppendMenu(hfile, MF_STRING, menu_id_save_as, L"Save as..\tCtrl+A");
 	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, menu_id_exit, L"Exit");
+	AppendMenu(hfile, MF_STRING, menu_id_exit, L"Exit\tCtrl+Q");
 
 	//HEDIT
-	AppendMenu(hedit, MF_STRING, menu_id_cut, L"Cut");
+	AppendMenu(hedit, MF_STRING, menu_id_cut, L"Cut\tCtrl+X");
 	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, menu_id_insert, L"Insert");
+	AppendMenu(hedit, MF_STRING, menu_id_insert, L"Insert\tCtrl+V");
 	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, menu_id_copy, L"Copy");
+	AppendMenu(hedit, MF_STRING, menu_id_copy, L"Copy\tCtrl+C");
 	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, menu_id_undo, L"Undo");
+	AppendMenu(hedit, MF_STRING, menu_id_undo, L"Undo\tCtrl+Z");
 	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, menu_id_return, L"Return");
+	AppendMenu(hedit, MF_STRING, menu_id_return, L"Return\tCtrl+U");
 
 	//HWINDOW
-	AppendMenu(hwindow, MF_STRING, menu_id_close, L"Close");
+	AppendMenu(hwindow, MF_STRING, menu_id_close, L"Close\tAlt+N");
 	AppendMenu(hwindow, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hwindow, MF_STRING, menu_id_roll_up, L"Roll up");
+	AppendMenu(hwindow, MF_STRING, menu_id_roll_up, L"Roll up\tAlt+Q");
 	AppendMenu(hwindow, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hwindow, MF_STRING, menu_id_expand, L"Expand");
+	AppendMenu(hwindow, MF_STRING, menu_id_expand, L"Expand\tAlt+W");
 
 
 	//HHELP 
-	AppendMenu(hhelp, MF_STRING, menu_id_about, L"About");
+	AppendMenu(hhelp, MF_STRING, menu_id_about, L"About\tAlt+I");
 	SetMenu(this->m_hWnd, hMenuBar);
 }
 
