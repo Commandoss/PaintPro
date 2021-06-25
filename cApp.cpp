@@ -54,7 +54,7 @@ void cApp::init_native_window_obj() {
 		throw runtime_error("Error, can't register main window class!"s);
 
 	RECT _windowRC{ 0, 0, this->m_nAppWidth, this->m_nAppHeigth };
-	AdjustWindowRect( &_windowRC, WS_OVERLAPPEDWINDOW, false);
+	AdjustWindowRect(&_windowRC, WS_OVERLAPPEDWINDOW, false);
 
 	this->m_hWnd = CreateWindowEx(
 		0,
@@ -68,37 +68,22 @@ void cApp::init_native_window_obj() {
 		throw runtime_error("Error, can't create main window!"s);
 }
 
-
-LRESULT cApp::application_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK cApp::application_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	cApp* pApp;
-
-
-
-
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
-
-LRESULT cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	switch (uMsg)
-	{
-	case WM_COMMAND: 
-	{
-		switch (static_cast<cApp::CTL_ID>(LOWORD(wParam)))
-		{
-		case cApp::CTL_ID::CALCBUTTON_ID:
-		{
-
-		}
-		break;
+	if (uMsg == WM_CREATE) {
+		pApp = static_cast<cApp*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
+		SetLastError(0);
+		if (!SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pApp))) {
+			if (GetLastError() != 0) return false;
 		}
 	}
-	return 0;
-
-	case WM_DESTROY:
-	{
-		PostQuitMessage(EXIT_FAILURE);
+	else {
+		pApp = reinterpret_cast<cApp*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 	}
-	return 0;
+
+	if (pApp) {
+		pApp->m_hWnd = hWnd;
+		return pApp->window_proc(hWnd, uMsg, wParam, lParam);
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
@@ -161,8 +146,6 @@ void cApp::create_toolbar() {
 	using std::runtime_error;
 	using namespace std::string_literals;
 
-	const std::wstring m_szClassNameChl{ L"ToolbarWindow" };
-
 	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
 	_wc.cbClsExtra = 0;
 	_wc.cbWndExtra = 0;
@@ -172,18 +155,17 @@ void cApp::create_toolbar() {
 	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
 	_wc.hInstance = GetModuleHandle(nullptr);
 	_wc.lpfnWndProc = cApp::application_proc;
-	_wc.lpszClassName = m_szClassNameChl.c_str();
+	_wc.lpszClassName = this->m_szClassNameBar.c_str();
 	_wc.lpszMenuName = nullptr;
 	_wc.style = CS_VREDRAW | CS_HREDRAW;
 	
 	if (!RegisterClassEx(&_wc))
 		throw runtime_error("Error, can't register main window class!"s);
 	
-
 	this->m_hWndToolbar = CreateWindowEx (
 		0,
-		m_szClassNameChl.c_str(),
-		nullptr,
+		this->m_szClassNameBar.c_str(),
+		L"Toolbar",
 		WS_CHILD | WS_BORDER | WS_VISIBLE,
 		0,
 		0,
@@ -191,24 +173,65 @@ void cApp::create_toolbar() {
 		50, 
 		this->m_hWnd, nullptr, GetModuleHandle(nullptr), nullptr);
 
-	//WNDCLASS w;
-	//memset(&w, 0, sizeof(WNDCLASS));
-	//w.lpfnWndProc = ChildProc;
-	//w.hInstance = hinst;
-	//w.hbrBackground = GetStockBrush(WHITE_BRUSH);
-	//w.lpszClassName = "ChildWClass";
-	//w.hCursor = LoadCursor(NULL, IDC_CROSS);
-	//RegisterClass(&w);
-	//HWND child;
-	//child = CreateWindowEx(0, "ChildWClass", (LPCTSTR)NULL,
-	//	WS_CHILD | WS_BORDER | WS_VISIBLE, i * 10, i * 10,
-	//	50, 50, hwnd, (HMENU)(int)(ID_FIRSTCHILD + i), hinst, NULL);
-
 	if (!this->m_hWndToolbar)
 		throw runtime_error("Error, can't Toolbar!"s);
-	//UpdateWindow(this->m_hWnd);
-	//SetParent(hwnd, hwndparent);
-	//ShowWindow(hwnd, SW_SHOWNORMAL);
+}
+
+void cApp::create_toolbar_button() {
+
+}
+
+LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	switch (uMsg)
+	{
+	case WM_COMMAND:
+	{
+		switch (static_cast<cApp::CTL_ID>(LOWORD(wParam)))
+		{
+		case cApp::CTL_ID::CALCBUTTON_ID:
+		{
+
+		}
+		break;
+		}
+	}
+	return 0;
+
+	case WM_SIZE:
+	{
+
+	}
+	return 0;
+
+	case WM_DESTROY:
+	{
+		PostQuitMessage(EXIT_FAILURE);
+	}
+	return 0;
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+
+LRESULT CALLBACK cApp::toolbar_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	switch (uMsg)
+	{
+	case WM_COMMAND:
+	{
+
+	}
+	case WM_SIZE:
+	{
+		LOWORD(lParam);
+		MoveWindow(hWnd, 0, 0, LOWORD(lParam), 50, 1);
+		ShowWindow(hWnd, SW_SHOWNORMAL);
+	}
+	return 0;
+
+	default:
+		break;
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 void cApp::create_native_controls() {

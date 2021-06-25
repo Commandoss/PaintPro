@@ -26,7 +26,11 @@ public:
 private:
 	void init_native_window_obj();
 	void Create_Menu_Bar();
+
 	void create_toolbar();
+	LRESULT CALLBACK toolbar_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam); //вроде не нужна
+
+	void create_toolbar_button();
 
 	static LRESULT CALLBACK application_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT CALLBACK window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -35,6 +39,7 @@ private:
 
 private:
 	const std::wstring m_szAppName{ L"DrawPaint" }, m_szClassName{ L"MainWindow" };
+	const std::wstring m_szClassNameBar{ L"ToolbarWindow" };
 	HWND m_hWnd, m_hWndToolbar;
 	const int m_nAppWidth{ 1280 }, m_nAppHeigth{ 720 };
 

@@ -152,10 +152,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cApp.h" />
+    <ClInclude Include="cButton.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cApp.cpp" />
+    <ClCompile Include="cButton.cpp" />
     <ClCompile Include="PaintPro.cpp" />
   </ItemGroup>
   <ItemGroup>
