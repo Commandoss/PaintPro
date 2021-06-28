@@ -1,4 +1,3 @@
-﻿  PaintPro.cpp
-  cApp.cpp
-  Создание кода...
+﻿  cApp.cpp
+D:\PaintPro\PaintPro\cApp.cpp(430,2): warning C4060: оператор switch не содержит метку "case" или "default"
   PaintPro.vcxproj -> D:\PaintPro\Debug\PaintPro.exe

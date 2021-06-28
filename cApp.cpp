@@ -9,7 +9,7 @@ cApp::cApp() {
 		this->init_native_window_obj();
 		this->create_native_controls();
 	}
-	catch (const std::exception& e)
+	catch (const std::exception & e)
 	{
 		string exp_data = e.what();
 
@@ -31,61 +31,6 @@ int cApp::run() {
 		DispatchMessage(&msg);
 	}
 	return static_cast<int>(msg.wParam);
-}
-
-void cApp::init_native_window_obj() {
-	using std::runtime_error;
-	using namespace std::string_literals;
-
-	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
-	_wc.cbClsExtra = 0;
-	_wc.cbWndExtra = 0;
-	_wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
-	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	_wc.hIcon = (HICON)LoadImage(NULL, (application_path_icon.c_str()), IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
-	_wc.hIconSm = (HICON)LoadImage(NULL, (application_path_icon_small.c_str()), IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
-	_wc.hInstance = GetModuleHandle(nullptr);
-	_wc.lpfnWndProc = cApp::application_proc;
-	_wc.lpszClassName = this->m_szClassName.c_str();
-	_wc.lpszMenuName = nullptr;
-	_wc.style = CS_VREDRAW | CS_HREDRAW;
-
-	if (!RegisterClassEx(&_wc))
-		throw runtime_error("Error, can't register main window class!"s);
-
-	RECT _windowRC{ 0, 0, this->m_nAppWidth, this->m_nAppHeigth };
-	AdjustWindowRect(&_windowRC, WS_OVERLAPPEDWINDOW, false);
-
-	this->m_hWnd = CreateWindowEx(
-		0,
-		this->m_szClassName.c_str(),
-		this->m_szAppName.c_str(),
-		WS_DLGFRAME | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZE,
-		(GetSystemMetrics(SM_CXSCREEN) - _windowRC.right) / 2,
-		(GetSystemMetrics(SM_CYSCREEN) - _windowRC.bottom) / 2,
-		_windowRC.right, _windowRC.bottom, nullptr, nullptr, nullptr, this);
-	if (!this->m_hWnd)
-		throw runtime_error("Error, can't create main window!"s);
-}
-
-LRESULT CALLBACK cApp::application_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	cApp* pApp;
-	if (uMsg == WM_CREATE) {
-		pApp = static_cast<cApp*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
-		SetLastError(0);
-		if (!SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pApp))) {
-			if (GetLastError() != 0) return false;
-		}
-	}
-	else {
-		pApp = reinterpret_cast<cApp*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-	}
-
-	if (pApp) {
-		pApp->m_hWnd = hWnd;
-		return pApp->window_proc(hWnd, uMsg, wParam, lParam);
-	}
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 void cApp::Create_Menu_Bar()
@@ -148,7 +93,9 @@ void cApp::create_native_controls() {
 	{
 		this->Create_Menu_Bar();
 		this->create_toolbar();
+		this->create_wall();
 		this->create_accel_table();
+		this->create_canvas();
 	}
 	catch (const std::exception & e)
 	{
@@ -157,11 +104,8 @@ void cApp::create_native_controls() {
 		MessageBox(NULL, wstring(begin(exp_data), end(exp_data)).c_str(), (L"Error"), MB_ICONERROR | MB_OK);
 		ExitProcess(EXIT_FAILURE);
 	}
-
-
 	//if (this->m_hWndButton = CreateWindowEx(); this->m_hWndButton)
 }
-
 
 void cApp::create_accel_table() {
 	RegisterHotKey(this->m_hWnd, key_id_close, MOD_CONTROL, 0x4E);
@@ -180,43 +124,53 @@ void cApp::create_accel_table() {
 	RegisterHotKey(this->m_hWnd, key_id_about, MOD_ALT, 0x49);
 }
 
-void cApp::create_toolbar() {
+void cApp::create_toolbar_button() {
+}
+
+//Main window
+void cApp::init_native_window_obj() {
 	using std::runtime_error;
 	using namespace std::string_literals;
 
 	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
 	_wc.cbClsExtra = 0;
 	_wc.cbWndExtra = 0;
-	_wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(GRAY_BRUSH));
+	_wc.hbrBackground = (HBRUSH)COLOR_MENU;
 	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hIcon = (HICON)LoadImage(NULL, (application_path_icon.c_str()), IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
+	_wc.hIconSm = (HICON)LoadImage(NULL, (application_path_icon_small
+		.c_str()), IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
 	_wc.hInstance = GetModuleHandle(nullptr);
-	_wc.lpfnWndProc = cApp::application_proc;
-	_wc.lpszClassName = this->m_szClassNameBar.c_str();
+	_wc.lpfnWndProc = cApp::create_main_window;
+	_wc.lpszClassName = this->m_szClassName.c_str();
 	_wc.lpszMenuName = nullptr;
 	_wc.style = CS_VREDRAW | CS_HREDRAW;
-	
+
 	if (!RegisterClassEx(&_wc))
 		throw runtime_error("Error, can't register main window class!"s);
-	
-	this->m_hWndToolbar = CreateWindowEx (
-		0,
-		this->m_szClassNameBar.c_str(),
-		L"Toolbar",
-		WS_CHILD | WS_BORDER | WS_VISIBLE,
-		0,
-		0,
-		1280, 
-		50, 
-		this->m_hWnd, nullptr, GetModuleHandle(nullptr), nullptr);
 
-	if (!this->m_hWndToolbar)
-		throw runtime_error("Error, can't Toolbar!"s);
+	RECT _windowRC{ 0, 0, this->m_nAppWidth, this->m_nAppHeigth };
+	AdjustWindowRect(&_windowRC, WS_OVERLAPPEDWINDOW, false);
+
+	this->m_hWnd = CreateWindowEx(
+		0,
+		this->m_szClassName.c_str(),
+		this->m_szAppName.c_str(),
+		WS_OVERLAPPEDWINDOW,
+		(GetSystemMetrics(SM_CXSCREEN) - _windowRC.right) / 2,
+		(GetSystemMetrics(SM_CYSCREEN) - _windowRC.bottom) / 2,
+		_windowRC.right, _windowRC.bottom, nullptr, nullptr, nullptr, this);
+	if (!this->m_hWnd)
+		throw runtime_error("Error, can't create main window!"s);
 }
 
-void cApp::create_toolbar_button() {
-
+LRESULT CALLBACK cApp::create_main_window(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
+	if (pApp) {
+		pApp->m_hWnd = hWnd;
+		return pApp->window_proc(hWnd, uMsg, wParam, lParam);
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -224,6 +178,11 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	using std::string;
 	switch (uMsg)
 	{
+	case WM_CREATE:
+	{
+		//SetWindowRgn(hWnd, (HRGN)626, 1);
+
+	}
 	case WM_COMMAND:
 	{
 		switch (LOWORD(wParam))
@@ -307,6 +266,13 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	}
 	return 0;
 
+	case WM_SIZE:
+	{
+		this->m_nToolbarWidth = LOWORD(lParam);
+		SetWindowPos(this->m_hWndToolbar, nullptr, 0, 0, this->m_nToolbarWidth, this->m_nToolbarHeigth, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+	}
+	return 0;
+
 	case WM_HOTKEY:
 	{
 		switch (LOWORD(wParam))
@@ -385,12 +351,6 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	}
 	return 0;
 
-	case WM_SIZE:
-	{
-
-	}
-	return 0;
-
 	case WM_DESTROY:
 	{
 		PostQuitMessage(EXIT_FAILURE);
@@ -400,28 +360,217 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-
-LRESULT CALLBACK cApp::toolbar_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	switch (uMsg)
-	{
-	case WM_COMMAND:
-	{
-
+cApp* cApp::create_class_ptr(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	cApp* pApp;
+	if (uMsg == WM_CREATE) {
+		pApp = static_cast<cApp*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
+		SetLastError(0);
+		if (!SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pApp))) {
+			if (GetLastError() != 0) return false;
+		}
 	}
-	case WM_SIZE:
-	{
-		LOWORD(lParam);
-		MoveWindow(hWnd, 0, 0, LOWORD(lParam), 50, 1);
-		ShowWindow(hWnd, SW_SHOWNORMAL);
+	else {
+		pApp = reinterpret_cast<cApp*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 	}
-	return 0;
+	return pApp;
+}
 
-	default:
-		break;
+//ToolBar Window
+void cApp::create_toolbar() {
+	using std::runtime_error;
+	using namespace std::string_literals;
+
+	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
+	_wc.cbClsExtra = 0;
+	_wc.cbWndExtra = 0;
+	_wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(GRAY_BRUSH));
+	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hInstance = GetModuleHandle(nullptr);
+	_wc.lpfnWndProc = cApp::static_toolbar_proc;
+	_wc.lpszClassName = this->m_szClassNameBar.c_str();
+	_wc.lpszMenuName = nullptr;
+	_wc.style = CS_VREDRAW | CS_HREDRAW;
+
+	if (!RegisterClassEx(&_wc))
+		throw runtime_error("Error, can't register toolbar class!"s);
+
+	this->m_hWndToolbar = CreateWindowEx(
+		0,
+		this->m_szClassNameBar.c_str(),
+		L"Toolbar",
+		WS_CHILD | WS_BORDER | WS_VISIBLE,
+		0,
+		0,
+		1280,
+		50,
+		this->m_hWnd, nullptr, nullptr, this);
+
+	if (!this->m_hWndToolbar)
+		throw runtime_error("Error, can't create Toolbar!"s);
+}
+
+LRESULT CALLBACK cApp::static_toolbar_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
+	if (pApp) {
+		pApp->m_hWndToolbar = hWnd;
+		return pApp->toolbar_proc(hWnd, uMsg, wParam, lParam);
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
+LRESULT CALLBACK cApp::toolbar_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	using std::wstring;
+	using std::string;
+	switch (uMsg)
+	{
+
+
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam); 
+
+}
+
+//Wall Window
+void cApp::create_wall() {
+	using std::runtime_error;
+	using namespace std::string_literals;
+
+	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
+	_wc.cbClsExtra = 0;
+	_wc.cbWndExtra = 0;
+	_wc.hbrBackground = (HBRUSH)COLOR_MENU;
+	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hInstance = GetModuleHandle(nullptr);
+	_wc.lpfnWndProc = cApp::static_wall_proc;
+	_wc.lpszClassName = this->m_szWallName.c_str();
+	_wc.lpszMenuName = nullptr;
+	_wc.style = CS_VREDRAW | CS_HREDRAW;
+
+	if (!RegisterClassEx(&_wc))
+		throw runtime_error("Error, can't register wall class!"s);
+
+	this->m_hWndWall = CreateWindowEx(
+		0,
+		this->m_szWallName.c_str(),
+		L"Wall",
+		WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL,
+		0,
+		50,
+		this->m_nWallWidth,
+		this->m_nWallHeigth,
+		this->m_hWnd, nullptr, nullptr, this);
+
+	if (!this->m_hWndToolbar)
+		throw runtime_error("Error, can't wall canvas!"s);
+}
+
+LRESULT cApp::static_wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
+	if (pApp) {
+		pApp->m_hWndWall = hWnd;
+		return pApp->wall_proc(hWnd, uMsg, wParam, lParam);
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT cApp::wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	switch (uMsg)
+	{
+	case WM_CREATE:
+	{
+		/*| WS_HSCROLL | WS_VSCROLL
+			scr1 = CreateWindow(_T("scrollbar"), NULL, WS_CHILD | WS_VISIBLE,
+				10, 10, 200, 20, hWnd, NULL, hInst, NULL);
+		s1Pos = 100; s1Min = 1; s1Max = 100;
+		SetScrollRange(s1Scroll, SB_CTL, s1Min, s1Max, TRUE);
+		SetScrollPos(s1Scroll, SB_CTL, s1Pos, TRUE);*/
+	}
+	return 0;
+
+	case WM_VSCROLL:
+	{
+		SCROLLINFO scrInfo;
+		scrInfo.cbSize = sizeof(SCROLLINFO);
+
+		scrInfo.fMask = SIF_ALL; //получаем текущие параметры scrollbar-а
+		GetScrollInfo(hWnd, SB_VERT, &scrInfo);
+
+		int currentPos = scrInfo.nPos; //запоминаем текущее положение содержимого
+
+		switch (LOWORD(wParam)) { //определяем действие пользователя и изменяем положение
+		case SB_LINEUP: //клик на стрелку вверх
+			scrInfo.nPos -= 1;
+			break;
+		case SB_LINEDOWN: //клик на стрелку вниз 
+			scrInfo.nPos += 1;
+			break;
+		case SB_THUMBTRACK: //перетаскивание ползунка
+			scrInfo.nPos = scrInfo.nTrackPos;
+			break;
+		default: return 0; //все прочие действия (например нажатие PageUp/PageDown) игнорируем
+		}
+
+		scrInfo.fMask = SIF_POS; //пробуем применить новое положение
+		SetScrollInfo(hWnd, SB_VERT, &scrInfo, TRUE);
+		GetScrollInfo(hWnd, SB_VERT, &scrInfo); //(см. примечание ниже)
+
+		int yScroll = currentPos - scrInfo.nPos; // вычисляем величину прокрутки
+		ScrollWindow(hWnd, 0, yScroll, NULL, NULL); //выполняем прокрутку
+	}
+	return 0;
+
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+//Canvas Window
+void cApp::create_canvas() {
+	using std::runtime_error;
+	using namespace std::string_literals;
+
+	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
+	_wc.cbClsExtra = 0;
+	_wc.cbWndExtra = 0;
+	_wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
+	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+	_wc.hInstance = GetModuleHandle(nullptr);
+	_wc.lpfnWndProc = cApp::static_canvas_proc;
+	_wc.lpszClassName = this->m_szCanvasName.c_str();
+	_wc.lpszMenuName = nullptr;
+	_wc.style = CS_VREDRAW | CS_HREDRAW;
+
+	if (!RegisterClassEx(&_wc))
+		throw runtime_error("Error, can't register canvas class!"s);
+
+	this->m_hWndCanvas = CreateWindowEx(
+		0,
+		this->m_szCanvasName.c_str(),
+		L"Canvas",
+		WS_CHILD | WS_BORDER | WS_VISIBLE,
+		5,
+		55,
+		this->m_nCanvasWidth,
+		this->m_nCanvasHeigth,
+		this->m_hWnd, nullptr, nullptr, this);
+
+	if (!this->m_hWndToolbar)
+		throw runtime_error("Error, can't create canvas!"s);
+}
+
+LRESULT cApp::static_canvas_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
+	if (pApp) {
+		pApp->m_hWndWall = hWnd;
+		return pApp->wall_proc(hWnd, uMsg, wParam, lParam);
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
 
 void cApp::about() {
 	MessageBox(this->m_hWnd, L"PaintPro\nVersion: 1.0\nCreator: Belousov Ilya.", L"About", MB_ICONINFORMATION | MB_OK);

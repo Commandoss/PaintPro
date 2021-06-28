@@ -1,6 +1,5 @@
 #pragma once
-#include <Windows.h>
-#include "resource.h"
+
 // menu application id
 const int menu_id_close = 1;
 const int menu_id_exit = 2;
@@ -32,6 +31,7 @@ const int key_id_return = 25;
 const int key_id_roll_up = 26;
 const int key_id_expand = 27;
 const int key_id_about = 28;
+const int key_id_right_mouse = 29;
 
 //icon application 
 const std::wstring application_path_icon= L"IMG/appicon.ico";

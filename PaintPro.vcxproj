@@ -162,10 +162,6 @@
     <ClCompile Include="PaintPro.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="PaintPro.ico" />
-    <Image Include="small.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
