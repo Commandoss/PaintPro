@@ -1,3 +1,23 @@
 ﻿  cApp.cpp
-D:\PaintPro\PaintPro\cApp.cpp(430,2): warning C4060: оператор switch не содержит метку "case" или "default"
-  PaintPro.vcxproj -> D:\PaintPro\Debug\PaintPro.exe
+D:\PaintPro\PaintPro\cWindow.h(33,7): error C3668: cWindow::massageBox: метод со спецификатором переопределения "override" не переопределяет какие-либо методы базового класса
+D:\PaintPro\PaintPro\Scrollbar.h(18,7): error C3668: Scrollbar::SetWindowSize: метод со спецификатором переопределения "override" не переопределяет какие-либо методы базового класса
+D:\PaintPro\PaintPro\cApp.cpp(280,25): error C2039: m_nToolbarWidth: не является членом "cApp"
+D:\PaintPro\PaintPro\cApp.h(12): message : см. объявление "cApp"
+D:\PaintPro\PaintPro\cApp.cpp(281,73): error C2039: m_nToolbarWidth: не является членом "cApp"
+D:\PaintPro\PaintPro\cApp.h(12): message : см. объявление "cApp"
+D:\PaintPro\PaintPro\cApp.cpp(281,97): error C2039: m_nToolbarHeigth: не является членом "cApp"
+D:\PaintPro\PaintPro\cApp.h(12): message : см. объявление "cApp"
+D:\PaintPro\PaintPro\cApp.cpp(281,144): error C2660: SetWindowPos: функция не принимает 5 аргументов
+  cWindow.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(4732,1): message : см. объявление "SetWindowPos"
+D:\PaintPro\PaintPro\cWindow.h(33,7): error C3668: cWindow::massageBox: метод со спецификатором переопределения "override" не переопределяет какие-либо методы базового класса
+  PaintPro.cpp
+D:\PaintPro\PaintPro\cWindow.cpp(19,28): error C3867: "std::basic_string<char,std::char_traits<char>,std::allocator<char>>::c_str": нестандартный синтаксис; используйте "&", чтобы создать указатель на член
+D:\PaintPro\PaintPro\cWindow.h(33,7): error C3668: cWindow::massageBox: метод со спецификатором переопределения "override" не переопределяет какие-либо методы базового класса
+  Scrollbar.cpp
+D:\PaintPro\PaintPro\Scrollbar.h(18,7): error C3668: Scrollbar::SetWindowSize: метод со спецификатором переопределения "override" не переопределяет какие-либо методы базового класса
+D:\PaintPro\PaintPro\cWindow.h(33,7): error C3668: cWindow::massageBox: метод со спецификатором переопределения "override" не переопределяет какие-либо методы базового класса
+D:\PaintPro\PaintPro\Scrollbar.h(18,7): error C3668: Scrollbar::SetWindowSize: метод со спецификатором переопределения "override" не переопределяет какие-либо методы базового класса
+D:\PaintPro\PaintPro\Scrollbar.cpp(3,64): error C2512: cWindow: нет подходящего конструктора по умолчанию
+  Создание кода...
+D:\PaintPro\PaintPro\cWindow.h(6,7): message : см. объявление "cWindow"

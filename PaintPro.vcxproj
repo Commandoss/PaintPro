@@ -153,13 +153,17 @@
   <ItemGroup>
     <ClInclude Include="cApp.h" />
     <ClInclude Include="cButton.h" />
+    <ClInclude Include="cWindow.h" />
     <ClInclude Include="ID.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Scrollbar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cApp.cpp" />
     <ClCompile Include="cButton.cpp" />
+    <ClCompile Include="cWindow.cpp" />
     <ClCompile Include="PaintPro.cpp" />
+    <ClCompile Include="Scrollbar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

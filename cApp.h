@@ -5,10 +5,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 #include <Windows.h>
 
-#include <string>
-#include <CommCtrl.h>
-//#include <algorithm>
-#include <stdexcept>
+#include "Scrollbar.h"
 #include "ID.h"
 
 
@@ -47,6 +44,8 @@ private:
 	void create_wall();
 	static LRESULT CALLBACK static_wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT CALLBACK wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	//HWND create_horizontal_ScrollBar(HWND hwndParent, int sbHeight);
+	//HWND create_vertical_ScrollBar(HWND hwndParent, int sbWidth);
 
 private:
 
@@ -59,12 +58,17 @@ private:
 	const std::wstring m_szClassNameBar{ L"ToolbarWindow" };
 	const std::wstring m_szCanvasName{ L"CanvasWindow" };
 	const std::wstring m_szWallName{ L"WallWindow" };
+	//const std::wstring m_szHorizontalScrollBar{ L"HorizontalScrollBar" }, m_szVerticalScrollBar{ L"VerticalScrollBar" };
 
 	HWND m_hWnd, m_hWndToolbar, m_hWndCanvas, m_hWndWall;
+	HWND m_hWndHScrollBar, m_hWndVScrollBar;
 
-	const int m_nAppWidth{ 1280 }, m_nAppHeigth{ 720 };
-	int m_nToolbarWidth{ 1280 }, m_nToolbarHeigth{ 50 };
-	int m_nWallWidth{ 1280 }, m_nWallHeigth{ 720 };
+	int m_nAppWidth{ 1280 }, m_nAppHeigth{ 720 };
+	//int m_nToolbarWidth{ 1280 }, m_nToolbarHeigth{ 50 };
+	//int m_nWallWidth{ 4096 }, m_nWallHeigth{ 3072 };
+	int m_nWallWidth{ 1409 }, m_nWallHeigth{ 720 };
 	int m_nCanvasWidth{ 1280 }, m_nCanvasHeigth{ 670 };
+
+	const int sbHeigth = 20;
 };
 

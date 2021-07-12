@@ -13,6 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Файлы заголовков\Window">
+      <UniqueIdentifier>{1673a984-daa2-4b08-867d-415118af152c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Window">
+      <UniqueIdentifier>{27ae3711-a6ab-4c9e-99d9-b3b8c8d930c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Window\Detail">
+      <UniqueIdentifier>{4898d0fc-a5ec-4a2a-beea-6f464334fd7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\main">
+      <UniqueIdentifier>{393ff1cd-7c0e-454c-b9e4-b327d70d8513}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Window\Detail">
+      <UniqueIdentifier>{8b72b7b8-0a9e-4826-839e-16c6c662fde3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -27,16 +42,28 @@
     <ClInclude Include="ID.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="cWindow.h">
+      <Filter>Файлы заголовков\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Scrollbar.h">
+      <Filter>Файлы заголовков\Window\Detail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PaintPro.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="cApp.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="cButton.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="cWindow.cpp">
+      <Filter>Исходные файлы\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Scrollbar.cpp">
+      <Filter>Исходные файлы\Window\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="PaintPro.cpp">
+      <Filter>Исходные файлы\main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

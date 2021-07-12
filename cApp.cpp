@@ -89,11 +89,14 @@ void cApp::create_native_controls() {
 	using std::wstring;
 	using std::string;
 
+
+
 	try
 	{
 		this->Create_Menu_Bar();
 		this->create_toolbar();
 		this->create_wall();
+		Scrollbar scrollbar_v(this->m_hWndWall, 20, SBS_VERT), scrollvar_h(this->m_hWndWall, 20, SBS_HORZ);
 		this->create_accel_table();
 		this->create_canvas();
 	}
@@ -268,8 +271,16 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 	case WM_SIZE:
 	{
-		this->m_nToolbarWidth = LOWORD(lParam);
+		RECT wnd_rect;
+		GetWindowRect(hWnd, &wnd_rect);
+
+		this->m_nAppWidth = LOWORD(lParam);
+		this->m_nAppHeigth = HIWORD(lParam);
+
+		this->m_nToolbarWidth = GetSystemMetrics(SM_CXSCREEN) - wnd_rect.left;
 		SetWindowPos(this->m_hWndToolbar, nullptr, 0, 0, this->m_nToolbarWidth, this->m_nToolbarHeigth, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+
+		SetWindowPos(this->m_hWndVScrollBar, nullptr, wnd_rect.right - this->sbHeigth, wnd_rect.top, sbHeigth, wnd_rect.bottom, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
 	}
 	return 0;
 
@@ -375,63 +386,6 @@ cApp* cApp::create_class_ptr(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return pApp;
 }
 
-//ToolBar Window
-void cApp::create_toolbar() {
-	using std::runtime_error;
-	using namespace std::string_literals;
-
-	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
-	_wc.cbClsExtra = 0;
-	_wc.cbWndExtra = 0;
-	_wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(GRAY_BRUSH));
-	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
-	_wc.hInstance = GetModuleHandle(nullptr);
-	_wc.lpfnWndProc = cApp::static_toolbar_proc;
-	_wc.lpszClassName = this->m_szClassNameBar.c_str();
-	_wc.lpszMenuName = nullptr;
-	_wc.style = CS_VREDRAW | CS_HREDRAW;
-
-	if (!RegisterClassEx(&_wc))
-		throw runtime_error("Error, can't register toolbar class!"s);
-
-	this->m_hWndToolbar = CreateWindowEx(
-		0,
-		this->m_szClassNameBar.c_str(),
-		L"Toolbar",
-		WS_CHILD | WS_BORDER | WS_VISIBLE,
-		0,
-		0,
-		1280,
-		50,
-		this->m_hWnd, nullptr, nullptr, this);
-
-	if (!this->m_hWndToolbar)
-		throw runtime_error("Error, can't create Toolbar!"s);
-}
-
-LRESULT CALLBACK cApp::static_toolbar_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
-	if (pApp) {
-		pApp->m_hWndToolbar = hWnd;
-		return pApp->toolbar_proc(hWnd, uMsg, wParam, lParam);
-	}
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
-
-LRESULT CALLBACK cApp::toolbar_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	using std::wstring;
-	using std::string;
-	switch (uMsg)
-	{
-
-
-	}
-	return DefWindowProc(hWnd, uMsg, wParam, lParam); 
-
-}
-
 //Wall Window
 void cApp::create_wall() {
 	using std::runtime_error;
@@ -457,15 +411,15 @@ void cApp::create_wall() {
 		0,
 		this->m_szWallName.c_str(),
 		L"Wall",
-		WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL,
+		WS_CHILD | WS_BORDER | WS_VISIBLE,
 		0,
 		50,
 		this->m_nWallWidth,
 		this->m_nWallHeigth,
 		this->m_hWnd, nullptr, nullptr, this);
 
-	if (!this->m_hWndToolbar)
-		throw runtime_error("Error, can't wall canvas!"s);
+	if (!this->m_hWndWall)
+		throw runtime_error("Error, can't create wall!"s);
 }
 
 LRESULT cApp::static_wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -493,33 +447,33 @@ LRESULT cApp::wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	case WM_VSCROLL:
 	{
-		SCROLLINFO scrInfo;
-		scrInfo.cbSize = sizeof(SCROLLINFO);
+		//SCROLLINFO scrInfo;
+		//scrInfo.cbSize = sizeof(SCROLLINFO);
 
-		scrInfo.fMask = SIF_ALL; //получаем текущие параметры scrollbar-а
-		GetScrollInfo(hWnd, SB_VERT, &scrInfo);
+		//scrInfo.fMask = SIF_ALL; //получаем текущие параметры scrollbar-а
+		//GetScrollInfo(hWnd, SB_VERT, &scrInfo);
 
-		int currentPos = scrInfo.nPos; //запоминаем текущее положение содержимого
+		//int currentPos = scrInfo.nPos; //запоминаем текущее положение содержимого
 
-		switch (LOWORD(wParam)) { //определяем действие пользователя и изменяем положение
-		case SB_LINEUP: //клик на стрелку вверх
-			scrInfo.nPos -= 1;
-			break;
-		case SB_LINEDOWN: //клик на стрелку вниз 
-			scrInfo.nPos += 1;
-			break;
-		case SB_THUMBTRACK: //перетаскивание ползунка
-			scrInfo.nPos = scrInfo.nTrackPos;
-			break;
-		default: return 0; //все прочие действия (например нажатие PageUp/PageDown) игнорируем
-		}
+		//switch (LOWORD(wParam)) { //определяем действие пользователя и изменяем положение
+		//case SB_LINEUP: //клик на стрелку вверх
+		//	scrInfo.nPos -= 1;
+		//	break;
+		//case SB_LINEDOWN: //клик на стрелку вниз 
+		//	scrInfo.nPos += 1;
+		//	break;
+		//case SB_THUMBTRACK: //перетаскивание ползунка
+		//	scrInfo.nPos = scrInfo.nTrackPos;
+		//	break;
+		//default: return 0; //все прочие действия (например нажатие PageUp/PageDown) игнорируем
+		//}
 
-		scrInfo.fMask = SIF_POS; //пробуем применить новое положение
-		SetScrollInfo(hWnd, SB_VERT, &scrInfo, TRUE);
-		GetScrollInfo(hWnd, SB_VERT, &scrInfo); //(см. примечание ниже)
+		//scrInfo.fMask = SIF_POS; //пробуем применить новое положение
+		//SetScrollInfo(hWnd, SB_VERT, &scrInfo, TRUE);
+		//GetScrollInfo(hWnd, SB_VERT, &scrInfo); //(см. примечание ниже)
 
-		int yScroll = currentPos - scrInfo.nPos; // вычисляем величину прокрутки
-		ScrollWindow(hWnd, 0, yScroll, NULL, NULL); //выполняем прокрутку
+		//int yScroll = currentPos - scrInfo.nPos; // вычисляем величину прокрутки
+		//ScrollWindow(hWnd, 0, yScroll, NULL, NULL); //выполняем прокрутку
 	}
 	return 0;
 
@@ -554,10 +508,10 @@ void cApp::create_canvas() {
 		L"Canvas",
 		WS_CHILD | WS_BORDER | WS_VISIBLE,
 		5,
-		55,
+		5,
 		this->m_nCanvasWidth,
 		this->m_nCanvasHeigth,
-		this->m_hWnd, nullptr, nullptr, this);
+		this->m_hWndWall, nullptr, nullptr, this);
 
 	if (!this->m_hWndToolbar)
 		throw runtime_error("Error, can't create canvas!"s);
@@ -567,7 +521,57 @@ LRESULT cApp::static_canvas_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
 	if (pApp) {
 		pApp->m_hWndWall = hWnd;
-		return pApp->wall_proc(hWnd, uMsg, wParam, lParam);
+		return pApp->canvas_proc(hWnd, uMsg, wParam, lParam);
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT cApp::canvas_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	switch (uMsg)
+	{
+	case WM_CREATE:
+	{
+		/*| WS_HSCROLL | WS_VSCROLL
+			scr1 = CreateWindow(_T("scrollbar"), NULL, WS_CHILD | WS_VISIBLE,
+				10, 10, 200, 20, hWnd, NULL, hInst, NULL);
+		s1Pos = 100; s1Min = 1; s1Max = 100;
+		SetScrollRange(s1Scroll, SB_CTL, s1Min, s1Max, TRUE);
+		SetScrollPos(s1Scroll, SB_CTL, s1Pos, TRUE);*/
+	}
+	return 0;
+
+	case WM_VSCROLL:
+	{
+		//SCROLLINFO scrInfo;
+		//scrInfo.cbSize = sizeof(SCROLLINFO);
+
+		//scrInfo.fMask = SIF_ALL; //получаем текущие параметры scrollbar-а
+		//GetScrollInfo(hWnd, SB_VERT, &scrInfo);
+
+		//int currentPos = scrInfo.nPos; //запоминаем текущее положение содержимого
+
+		//switch (LOWORD(wParam)) { //определяем действие пользователя и изменяем положение
+		//case SB_LINEUP: //клик на стрелку вверх
+		//	scrInfo.nPos -= 1;
+		//	break;
+		//case SB_LINEDOWN: //клик на стрелку вниз 
+		//	scrInfo.nPos += 1;
+		//	break;
+		//case SB_THUMBTRACK: //перетаскивание ползунка
+		//	scrInfo.nPos = scrInfo.nTrackPos;
+		//	break;
+		//default: return 0; //все прочие действия (например нажатие PageUp/PageDown) игнорируем
+		//}
+
+		//scrInfo.fMask = SIF_POS; //пробуем применить новое положение
+		//SetScrollInfo(hWnd, SB_VERT, &scrInfo, TRUE);
+		//GetScrollInfo(hWnd, SB_VERT, &scrInfo); //(см. примечание ниже)
+
+		//int yScroll = currentPos - scrInfo.nPos; // вычисляем величину прокрутки
+		//ScrollWindow(hWnd, 0, yScroll, NULL, NULL); //выполняем прокрутку
+	}
+	return 0;
+
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
