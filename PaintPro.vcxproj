@@ -153,17 +153,25 @@
   <ItemGroup>
     <ClInclude Include="cApp.h" />
     <ClInclude Include="cButton.h" />
+    <ClInclude Include="cCanvas.h" />
+    <ClInclude Include="cMenuBar.h" />
+    <ClInclude Include="cWall.h" />
     <ClInclude Include="cWindow.h" />
     <ClInclude Include="ID.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scrollbar.h" />
+    <ClInclude Include="Toolbar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cApp.cpp" />
     <ClCompile Include="cButton.cpp" />
+    <ClCompile Include="cCanvas.cpp" />
+    <ClCompile Include="cMenuBar.cpp" />
+    <ClCompile Include="cWall.cpp" />
     <ClCompile Include="cWindow.cpp" />
     <ClCompile Include="PaintPro.cpp" />
     <ClCompile Include="Scrollbar.cpp" />
+    <ClCompile Include="Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

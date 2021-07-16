@@ -2,7 +2,7 @@
 
 #include "cWindow.h"
 
-class Scrollbar: public cWindow
+class Scrollbar
 {
 private:
 	HWND m_hWndParent;
@@ -15,10 +15,9 @@ public:
 
 	HWND create(const DWORD type);
 	SCROLLINFO Initialise(const SCROLLINFO si, const RECT rect);
-	bool SetWindowSize(const unsigned int Width, const unsigned int Heigth) override;
 
 private:
-	void massageBox(const std::string msg) override;
+	void massageBox(const std::string msg);
 
 private:	
 	int s_Width;

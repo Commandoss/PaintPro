@@ -12,9 +12,7 @@ cApp::cApp() {
 	catch (const std::exception & e)
 	{
 		string exp_data = e.what();
-
-		MessageBox(NULL, wstring(begin(exp_data), end(exp_data)).c_str(), (L"Error"), MB_ICONERROR | MB_OK);
-		ExitProcess(EXIT_FAILURE);
+		massageBox(exp_data);
 	}
 }
 
@@ -33,102 +31,39 @@ int cApp::run() {
 	return static_cast<int>(msg.wParam);
 }
 
-void cApp::Create_Menu_Bar()
-{
-	HMENU hMenuBar = CreateMenu();
-	HMENU hfile = CreateMenu();
-	HMENU hedit = CreateMenu();
-	//HMENU himage = CreateMenu();
-	//HMENU hlayers = CreateMenu();
-	HMENU hwindow = CreateMenu();
-	HMENU hhelp = CreateMenu();
-
-	AppendMenu(hMenuBar, MF_POPUP, (UINT_PTR)hfile, L"File");
-	AppendMenu(hMenuBar, MF_POPUP, (UINT_PTR)hedit, L"Edit");
-	//AppendMenu(hMenuBar, MF_POPUP, (UINT_PTR)hfile, L"Image");
-	//AppendMenu(hMenuBar, MF_POPUP, (UINT_PTR)hedit, L"Layers");
-	AppendMenu(hMenuBar, MF_POPUP, (UINT_PTR)hwindow, L"Window");
-	AppendMenu(hMenuBar, MF_POPUP, (UINT_PTR)hhelp, L"Help");
-
-	//HFILE
-	AppendMenu(hfile, MF_STRING, menu_id_create, L"Create\tCtrl+N");
-	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, menu_id_open, L"Open\tCtrl+O");
-	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, menu_id_save, L"Save\tCtrl+S");
-	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, menu_id_save_as, L"Save as..\tCtrl+A");
-	AppendMenu(hfile, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hfile, MF_STRING, menu_id_exit, L"Exit\tCtrl+Q");
-
-	//HEDIT
-	AppendMenu(hedit, MF_STRING, menu_id_cut, L"Cut\tCtrl+X");
-	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, menu_id_insert, L"Insert\tCtrl+V");
-	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, menu_id_copy, L"Copy\tCtrl+C");
-	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, menu_id_undo, L"Undo\tCtrl+Z");
-	AppendMenu(hedit, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hedit, MF_STRING, menu_id_return, L"Return\tCtrl+U");
-
-	//HWINDOW
-	AppendMenu(hwindow, MF_STRING, menu_id_close, L"Close\tAlt+N");
-	AppendMenu(hwindow, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hwindow, MF_STRING, menu_id_roll_up, L"Roll up\tAlt+Q");
-	AppendMenu(hwindow, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hwindow, MF_STRING, menu_id_expand, L"Expand\tAlt+W");
-
-
-	//HHELP 
-	AppendMenu(hhelp, MF_STRING, menu_id_about, L"About\tAlt+I");
-	SetMenu(this->m_hWnd, hMenuBar);
-}
-
 void cApp::create_native_controls() {
-	using std::wstring;
-	using std::string;
+	this->MenuBar.create(m_hWnd);
+	this->Toolbar.create(m_hWnd, m_nAppWidth, 80, L"ToolbarClass", 0, 0);
+	this->Wall.create(m_hWnd, GetSystemMetrics(SM_CXFULLSCREEN), GetSystemMetrics(SM_CYFULLSCREEN), L"WallClass", 0, 80);
+	this->Canvas.create(m_hWnd, m_nAppWidth - 5, (m_nAppHeigth - 80), L"CanvasClass", 5, 85);
 
-
-
-	try
-	{
-		this->Create_Menu_Bar();
-		this->create_toolbar();
-		this->create_wall();
-		Scrollbar scrollbar_v(this->m_hWndWall, 20, SBS_VERT), scrollvar_h(this->m_hWndWall, 20, SBS_HORZ);
-		this->create_accel_table();
-		this->create_canvas();
-	}
-	catch (const std::exception & e)
-	{
-		string exp_data = e.what();
-
-		MessageBox(NULL, wstring(begin(exp_data), end(exp_data)).c_str(), (L"Error"), MB_ICONERROR | MB_OK);
-		ExitProcess(EXIT_FAILURE);
-	}
-	//if (this->m_hWndButton = CreateWindowEx(); this->m_hWndButton)
+	//this->create_toolbar();
+	//this->create_wall();
+	//Scrollbar scrollbar_v(this->m_hWndWall, 20, SBS_VERT), scrollvar_h(this->m_hWndWall, 20, SBS_HORZ);
+	//this->create_accel_table();
+	//this->create_canvas();
+//if (this->m_hWndButton = CreateWindowEx(); this->m_hWndButton)
 }
-
-void cApp::create_accel_table() {
-	RegisterHotKey(this->m_hWnd, key_id_close, MOD_CONTROL, 0x4E);
-	RegisterHotKey(this->m_hWnd, key_id_exit, MOD_CONTROL, 0x51);
-	RegisterHotKey(this->m_hWnd, key_id_create, MOD_CONTROL, 0x43);
-	RegisterHotKey(this->m_hWnd, key_id_open, MOD_CONTROL, 0x4f);
-	RegisterHotKey(this->m_hWnd, key_id_save, MOD_CONTROL, 0x53);
-	RegisterHotKey(this->m_hWnd, key_id_save_as, MOD_CONTROL, 0x41);
-	RegisterHotKey(this->m_hWnd, key_id_cut, MOD_CONTROL, 0x58);
-	RegisterHotKey(this->m_hWnd, key_id_insert, MOD_CONTROL, 0x56);
-	RegisterHotKey(this->m_hWnd, key_id_copy, MOD_CONTROL, 0x43);
-	RegisterHotKey(this->m_hWnd, key_id_undo, MOD_CONTROL, 0x5a);
-	RegisterHotKey(this->m_hWnd, key_id_return, MOD_CONTROL, 0x55);
-	RegisterHotKey(this->m_hWnd, key_id_roll_up, MOD_ALT, 0x51);
-	RegisterHotKey(this->m_hWnd, key_id_expand, MOD_ALT, 0x57);
-	RegisterHotKey(this->m_hWnd, key_id_about, MOD_ALT, 0x49);
-}
-
-void cApp::create_toolbar_button() {
-}
+//
+//void cApp::create_accel_table() {
+//	RegisterHotKey(this->m_hWnd, key_id_close, MOD_CONTROL, 0x4E);
+//	RegisterHotKey(this->m_hWnd, key_id_exit, MOD_CONTROL, 0x51);
+//	RegisterHotKey(this->m_hWnd, key_id_create, MOD_CONTROL, 0x43);
+//	RegisterHotKey(this->m_hWnd, key_id_open, MOD_CONTROL, 0x4f);
+//	RegisterHotKey(this->m_hWnd, key_id_save, MOD_CONTROL, 0x53);
+//	RegisterHotKey(this->m_hWnd, key_id_save_as, MOD_CONTROL, 0x41);
+//	RegisterHotKey(this->m_hWnd, key_id_cut, MOD_CONTROL, 0x58);
+//	RegisterHotKey(this->m_hWnd, key_id_insert, MOD_CONTROL, 0x56);
+//	RegisterHotKey(this->m_hWnd, key_id_copy, MOD_CONTROL, 0x43);
+//	RegisterHotKey(this->m_hWnd, key_id_undo, MOD_CONTROL, 0x5a);
+//	RegisterHotKey(this->m_hWnd, key_id_return, MOD_CONTROL, 0x55);
+//	RegisterHotKey(this->m_hWnd, key_id_roll_up, MOD_ALT, 0x51);
+//	RegisterHotKey(this->m_hWnd, key_id_expand, MOD_ALT, 0x57);
+//	RegisterHotKey(this->m_hWnd, key_id_about, MOD_ALT, 0x49);
+//}
+//
+//void cApp::create_toolbar_button() {
+//}
 
 //Main window
 void cApp::init_native_window_obj() {
@@ -197,12 +132,14 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 		break;
 		case menu_id_exit:
 		{
-			PostQuitMessage(EXIT_FAILURE);
+			if (this->MenuBar.exit() == IDYES) {
+				PostQuitMessage(EXIT_FAILURE);
+			}
 		}
 		break;
 		case menu_id_about:
 		{
-			this->about();
+			this->MenuBar.about();
 		}
 		break;
 		case menu_id_create:
@@ -260,11 +197,6 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 		}
 		break;
-		case cApp::CTL_ID::CALCBUTTON_ID:
-		{
-
-		}
-		break;
 		}
 	}
 	return 0;
@@ -277,8 +209,8 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 		this->m_nAppWidth = LOWORD(lParam);
 		this->m_nAppHeigth = HIWORD(lParam);
 
-		this->m_nToolbarWidth = GetSystemMetrics(SM_CXSCREEN) - wnd_rect.left;
-		SetWindowPos(this->m_hWndToolbar, nullptr, 0, 0, this->m_nToolbarWidth, this->m_nToolbarHeigth, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+		/*this->m_nToolbarWidth = GetSystemMetrics(SM_CXSCREEN) - wnd_rect.left;
+		SetWindowPos(this->m_hWndToolbar, nullptr, 0, 0, this->m_nToolbarWidth, this->m_nToolbarHeigth, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);*/
 
 		SetWindowPos(this->m_hWndVScrollBar, nullptr, wnd_rect.right - this->sbHeigth, wnd_rect.top, sbHeigth, wnd_rect.bottom, SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
 	}
@@ -295,7 +227,9 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 		break;
 		case key_id_exit:
 		{
-			PostQuitMessage(EXIT_FAILURE);
+			if (this->MenuBar.exit() == IDYES) {
+				PostQuitMessage(EXIT_FAILURE);
+			}
 		}
 		break;
 		case key_id_create:
@@ -355,7 +289,7 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 		break;
 		case key_id_about:
 		{
-			this->about();
+			this->MenuBar.about();
 		}
 		break;
 		}
@@ -364,7 +298,9 @@ LRESULT CALLBACK cApp::window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 	case WM_DESTROY:
 	{
+		//if (this->MenuBar.exit() == IDYES) {
 		PostQuitMessage(EXIT_FAILURE);
+		//}
 	}
 	return 0;
 	}
@@ -387,197 +323,203 @@ cApp* cApp::create_class_ptr(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 //Wall Window
-void cApp::create_wall() {
-	using std::runtime_error;
-	using namespace std::string_literals;
+//void cApp::create_wall() {
+//	using std::runtime_error;
+//	using namespace std::string_literals;
+//
+//	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
+//	_wc.cbClsExtra = 0;
+//	_wc.cbWndExtra = 0;
+//	_wc.hbrBackground = (HBRUSH)COLOR_MENU;
+//	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+//	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+//	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+//	_wc.hInstance = GetModuleHandle(nullptr);
+//	_wc.lpfnWndProc = cApp::static_wall_proc;
+//	_wc.lpszClassName = this->m_szWallName.c_str();
+//	_wc.lpszMenuName = nullptr;
+//	_wc.style = CS_VREDRAW | CS_HREDRAW;
+//
+//	if (!RegisterClassEx(&_wc))
+//		throw runtime_error("Error, can't register wall class!"s);
+//
+//	this->m_hWndWall = CreateWindowEx(
+//		0,
+//		this->m_szWallName.c_str(),
+//		L"Wall",
+//		WS_CHILD | WS_BORDER | WS_VISIBLE,
+//		0,
+//		50,
+//		this->m_nWallWidth,
+//		this->m_nWallHeigth,
+//		this->m_hWnd, nullptr, nullptr, this);
+//
+//	if (!this->m_hWndWall)
+//		throw runtime_error("Error, can't create wall!"s);
+//}
+//
+//LRESULT cApp::static_wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+//	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
+//	if (pApp) {
+//		pApp->m_hWndWall = hWnd;
+//		return pApp->wall_proc(hWnd, uMsg, wParam, lParam);
+//	}
+//	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+//}
+//
+//LRESULT cApp::wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+//	switch (uMsg)
+//	{
+//	case WM_CREATE:
+//	{
+//		/*| WS_HSCROLL | WS_VSCROLL
+//			scr1 = CreateWindow(_T("scrollbar"), NULL, WS_CHILD | WS_VISIBLE,
+//				10, 10, 200, 20, hWnd, NULL, hInst, NULL);
+//		s1Pos = 100; s1Min = 1; s1Max = 100;
+//		SetScrollRange(s1Scroll, SB_CTL, s1Min, s1Max, TRUE);
+//		SetScrollPos(s1Scroll, SB_CTL, s1Pos, TRUE);*/
+//	}
+//	return 0;
+//
+//	case WM_VSCROLL:
+//	{
+//		//SCROLLINFO scrInfo;
+//		//scrInfo.cbSize = sizeof(SCROLLINFO);
+//
+//		//scrInfo.fMask = SIF_ALL; //получаем текущие параметры scrollbar-а
+//		//GetScrollInfo(hWnd, SB_VERT, &scrInfo);
+//
+//		//int currentPos = scrInfo.nPos; //запоминаем текущее положение содержимого
+//
+//		//switch (LOWORD(wParam)) { //определяем действие пользователя и изменяем положение
+//		//case SB_LINEUP: //клик на стрелку вверх
+//		//	scrInfo.nPos -= 1;
+//		//	break;
+//		//case SB_LINEDOWN: //клик на стрелку вниз 
+//		//	scrInfo.nPos += 1;
+//		//	break;
+//		//case SB_THUMBTRACK: //перетаскивание ползунка
+//		//	scrInfo.nPos = scrInfo.nTrackPos;
+//		//	break;
+//		//default: return 0; //все прочие действия (например нажатие PageUp/PageDown) игнорируем
+//		//}
+//
+//		//scrInfo.fMask = SIF_POS; //пробуем применить новое положение
+//		//SetScrollInfo(hWnd, SB_VERT, &scrInfo, TRUE);
+//		//GetScrollInfo(hWnd, SB_VERT, &scrInfo); //(см. примечание ниже)
+//
+//		//int yScroll = currentPos - scrInfo.nPos; // вычисляем величину прокрутки
+//		//ScrollWindow(hWnd, 0, yScroll, NULL, NULL); //выполняем прокрутку
+//	}
+//	return 0;
+//
+//	}
+//	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+//}
+//
+////Canvas Window
+//void cApp::create_canvas() {
+//	using std::runtime_error;
+//	using namespace std::string_literals;
+//
+//	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
+//	_wc.cbClsExtra = 0;
+//	_wc.cbWndExtra = 0;
+//	_wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
+//	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+//	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+//	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+//	_wc.hInstance = GetModuleHandle(nullptr);
+//	_wc.lpfnWndProc = cApp::static_canvas_proc;
+//	_wc.lpszClassName = this->m_szCanvasName.c_str();
+//	_wc.lpszMenuName = nullptr;
+//	_wc.style = CS_VREDRAW | CS_HREDRAW;
+//
+//	if (!RegisterClassEx(&_wc))
+//		throw runtime_error("Error, can't register canvas class!"s);
+//
+//	this->m_hWndCanvas = CreateWindowEx(
+//		0,
+//		this->m_szCanvasName.c_str(),
+//		L"Canvas",
+//		WS_CHILD | WS_BORDER | WS_VISIBLE,
+//		5,
+//		5,
+//		this->m_nCanvasWidth,
+//		this->m_nCanvasHeigth,
+//		this->m_hWndWall, nullptr, nullptr, this);
+//
+//	if (!this->m_hWndToolbar)
+//		throw runtime_error("Error, can't create canvas!"s);
+//}
+//
+//LRESULT cApp::static_canvas_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+//	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
+//	if (pApp) {
+//		pApp->m_hWndWall = hWnd;
+//		return pApp->canvas_proc(hWnd, uMsg, wParam, lParam);
+//	}
+//	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+//}
+//
+//LRESULT cApp::canvas_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+//	switch (uMsg)
+//	{
+//	case WM_CREATE:
+//	{
+//		/*| WS_HSCROLL | WS_VSCROLL
+//			scr1 = CreateWindow(_T("scrollbar"), NULL, WS_CHILD | WS_VISIBLE,
+//				10, 10, 200, 20, hWnd, NULL, hInst, NULL);
+//		s1Pos = 100; s1Min = 1; s1Max = 100;
+//		SetScrollRange(s1Scroll, SB_CTL, s1Min, s1Max, TRUE);
+//		SetScrollPos(s1Scroll, SB_CTL, s1Pos, TRUE);*/
+//	}
+//	return 0;
+//
+//	case WM_VSCROLL:
+//	{
+//		//SCROLLINFO scrInfo;
+//		//scrInfo.cbSize = sizeof(SCROLLINFO);
+//
+//		//scrInfo.fMask = SIF_ALL; //получаем текущие параметры scrollbar-а
+//		//GetScrollInfo(hWnd, SB_VERT, &scrInfo);
+//
+//		//int currentPos = scrInfo.nPos; //запоминаем текущее положение содержимого
+//
+//		//switch (LOWORD(wParam)) { //определяем действие пользователя и изменяем положение
+//		//case SB_LINEUP: //клик на стрелку вверх
+//		//	scrInfo.nPos -= 1;
+//		//	break;
+//		//case SB_LINEDOWN: //клик на стрелку вниз 
+//		//	scrInfo.nPos += 1;
+//		//	break;
+//		//case SB_THUMBTRACK: //перетаскивание ползунка
+//		//	scrInfo.nPos = scrInfo.nTrackPos;
+//		//	break;
+//		//default: return 0; //все прочие действия (например нажатие PageUp/PageDown) игнорируем
+//		//}
+//
+//		//scrInfo.fMask = SIF_POS; //пробуем применить новое положение
+//		//SetScrollInfo(hWnd, SB_VERT, &scrInfo, TRUE);
+//		//GetScrollInfo(hWnd, SB_VERT, &scrInfo); //(см. примечание ниже)
+//
+//		//int yScroll = currentPos - scrInfo.nPos; // вычисляем величину прокрутки
+//		//ScrollWindow(hWnd, 0, yScroll, NULL, NULL); //выполняем прокрутку
+//	}
+//	return 0;
+//
+//	}
+//	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+//}
+//
+////void cApp::about() {
+////	MessageBox(this->m_hWnd, L"PaintPro\nVersion: 1.0\nCreator: Belousov Ilya.", L"About", MB_ICONINFORMATION | MB_OK);
+////////}
 
-	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
-	_wc.cbClsExtra = 0;
-	_wc.cbWndExtra = 0;
-	_wc.hbrBackground = (HBRUSH)COLOR_MENU;
-	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
-	_wc.hInstance = GetModuleHandle(nullptr);
-	_wc.lpfnWndProc = cApp::static_wall_proc;
-	_wc.lpszClassName = this->m_szWallName.c_str();
-	_wc.lpszMenuName = nullptr;
-	_wc.style = CS_VREDRAW | CS_HREDRAW;
+void cApp::massageBox(const std::string msg) {
+	using std::wstring;
+	using std::string;
 
-	if (!RegisterClassEx(&_wc))
-		throw runtime_error("Error, can't register wall class!"s);
-
-	this->m_hWndWall = CreateWindowEx(
-		0,
-		this->m_szWallName.c_str(),
-		L"Wall",
-		WS_CHILD | WS_BORDER | WS_VISIBLE,
-		0,
-		50,
-		this->m_nWallWidth,
-		this->m_nWallHeigth,
-		this->m_hWnd, nullptr, nullptr, this);
-
-	if (!this->m_hWndWall)
-		throw runtime_error("Error, can't create wall!"s);
+	MessageBox(NULL, wstring(begin(msg), end(msg)).c_str(), (L"Error"), MB_ICONERROR | MB_OK);
+	ExitProcess(EXIT_FAILURE);
 }
-
-LRESULT cApp::static_wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
-	if (pApp) {
-		pApp->m_hWndWall = hWnd;
-		return pApp->wall_proc(hWnd, uMsg, wParam, lParam);
-	}
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
-
-LRESULT cApp::wall_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	switch (uMsg)
-	{
-	case WM_CREATE:
-	{
-		/*| WS_HSCROLL | WS_VSCROLL
-			scr1 = CreateWindow(_T("scrollbar"), NULL, WS_CHILD | WS_VISIBLE,
-				10, 10, 200, 20, hWnd, NULL, hInst, NULL);
-		s1Pos = 100; s1Min = 1; s1Max = 100;
-		SetScrollRange(s1Scroll, SB_CTL, s1Min, s1Max, TRUE);
-		SetScrollPos(s1Scroll, SB_CTL, s1Pos, TRUE);*/
-	}
-	return 0;
-
-	case WM_VSCROLL:
-	{
-		//SCROLLINFO scrInfo;
-		//scrInfo.cbSize = sizeof(SCROLLINFO);
-
-		//scrInfo.fMask = SIF_ALL; //получаем текущие параметры scrollbar-а
-		//GetScrollInfo(hWnd, SB_VERT, &scrInfo);
-
-		//int currentPos = scrInfo.nPos; //запоминаем текущее положение содержимого
-
-		//switch (LOWORD(wParam)) { //определяем действие пользователя и изменяем положение
-		//case SB_LINEUP: //клик на стрелку вверх
-		//	scrInfo.nPos -= 1;
-		//	break;
-		//case SB_LINEDOWN: //клик на стрелку вниз 
-		//	scrInfo.nPos += 1;
-		//	break;
-		//case SB_THUMBTRACK: //перетаскивание ползунка
-		//	scrInfo.nPos = scrInfo.nTrackPos;
-		//	break;
-		//default: return 0; //все прочие действия (например нажатие PageUp/PageDown) игнорируем
-		//}
-
-		//scrInfo.fMask = SIF_POS; //пробуем применить новое положение
-		//SetScrollInfo(hWnd, SB_VERT, &scrInfo, TRUE);
-		//GetScrollInfo(hWnd, SB_VERT, &scrInfo); //(см. примечание ниже)
-
-		//int yScroll = currentPos - scrInfo.nPos; // вычисляем величину прокрутки
-		//ScrollWindow(hWnd, 0, yScroll, NULL, NULL); //выполняем прокрутку
-	}
-	return 0;
-
-	}
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
-
-//Canvas Window
-void cApp::create_canvas() {
-	using std::runtime_error;
-	using namespace std::string_literals;
-
-	WNDCLASSEX _wc{ sizeof(WNDCLASSEX) };
-	_wc.cbClsExtra = 0;
-	_wc.cbWndExtra = 0;
-	_wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
-	_wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	_wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	_wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
-	_wc.hInstance = GetModuleHandle(nullptr);
-	_wc.lpfnWndProc = cApp::static_canvas_proc;
-	_wc.lpszClassName = this->m_szCanvasName.c_str();
-	_wc.lpszMenuName = nullptr;
-	_wc.style = CS_VREDRAW | CS_HREDRAW;
-
-	if (!RegisterClassEx(&_wc))
-		throw runtime_error("Error, can't register canvas class!"s);
-
-	this->m_hWndCanvas = CreateWindowEx(
-		0,
-		this->m_szCanvasName.c_str(),
-		L"Canvas",
-		WS_CHILD | WS_BORDER | WS_VISIBLE,
-		5,
-		5,
-		this->m_nCanvasWidth,
-		this->m_nCanvasHeigth,
-		this->m_hWndWall, nullptr, nullptr, this);
-
-	if (!this->m_hWndToolbar)
-		throw runtime_error("Error, can't create canvas!"s);
-}
-
-LRESULT cApp::static_canvas_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	cApp* pApp = cApp::create_class_ptr(hWnd, uMsg, wParam, lParam);
-	if (pApp) {
-		pApp->m_hWndWall = hWnd;
-		return pApp->canvas_proc(hWnd, uMsg, wParam, lParam);
-	}
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
-
-LRESULT cApp::canvas_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	switch (uMsg)
-	{
-	case WM_CREATE:
-	{
-		/*| WS_HSCROLL | WS_VSCROLL
-			scr1 = CreateWindow(_T("scrollbar"), NULL, WS_CHILD | WS_VISIBLE,
-				10, 10, 200, 20, hWnd, NULL, hInst, NULL);
-		s1Pos = 100; s1Min = 1; s1Max = 100;
-		SetScrollRange(s1Scroll, SB_CTL, s1Min, s1Max, TRUE);
-		SetScrollPos(s1Scroll, SB_CTL, s1Pos, TRUE);*/
-	}
-	return 0;
-
-	case WM_VSCROLL:
-	{
-		//SCROLLINFO scrInfo;
-		//scrInfo.cbSize = sizeof(SCROLLINFO);
-
-		//scrInfo.fMask = SIF_ALL; //получаем текущие параметры scrollbar-а
-		//GetScrollInfo(hWnd, SB_VERT, &scrInfo);
-
-		//int currentPos = scrInfo.nPos; //запоминаем текущее положение содержимого
-
-		//switch (LOWORD(wParam)) { //определяем действие пользователя и изменяем положение
-		//case SB_LINEUP: //клик на стрелку вверх
-		//	scrInfo.nPos -= 1;
-		//	break;
-		//case SB_LINEDOWN: //клик на стрелку вниз 
-		//	scrInfo.nPos += 1;
-		//	break;
-		//case SB_THUMBTRACK: //перетаскивание ползунка
-		//	scrInfo.nPos = scrInfo.nTrackPos;
-		//	break;
-		//default: return 0; //все прочие действия (например нажатие PageUp/PageDown) игнорируем
-		//}
-
-		//scrInfo.fMask = SIF_POS; //пробуем применить новое положение
-		//SetScrollInfo(hWnd, SB_VERT, &scrInfo, TRUE);
-		//GetScrollInfo(hWnd, SB_VERT, &scrInfo); //(см. примечание ниже)
-
-		//int yScroll = currentPos - scrInfo.nPos; // вычисляем величину прокрутки
-		//ScrollWindow(hWnd, 0, yScroll, NULL, NULL); //выполняем прокрутку
-	}
-	return 0;
-
-	}
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
-
-void cApp::about() {
-	MessageBox(this->m_hWnd, L"PaintPro\nVersion: 1.0\nCreator: Belousov Ilya.", L"About", MB_ICONINFORMATION | MB_OK);
-}
-
-

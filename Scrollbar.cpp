@@ -14,9 +14,7 @@ Scrollbar::Scrollbar(HWND hWndParent, int sbWidth, DWORD type) {
 	catch (const std::exception & e)
 	{
 		string exp_data = e.what();
-
-		MessageBox(NULL, wstring(begin(exp_data), end(exp_data)).c_str(), (L"Error"), MB_ICONERROR | MB_OK);
-		ExitProcess(EXIT_FAILURE);
+		massageBox(exp_data);
 	}
 }
 
@@ -70,4 +68,12 @@ HWND Scrollbar::create(DWORD type) {
 
 	//SetScrollRange(this->m_hWndScrollbar, SB_CTL, 0, this->m_nWallHeigth, TRUE);
 	//SetScrollPos(this->m_hWndScrollbar, SB_CTL, 0, TRUE);
+}
+
+void Scrollbar::massageBox(const std::string msg) {
+	using std::wstring;
+	using std::string;
+
+	MessageBox(NULL, wstring(begin(msg), end(msg)).c_str(), (L"Error"), MB_ICONERROR | MB_OK);
+	ExitProcess(EXIT_FAILURE);
 }

@@ -39,13 +39,25 @@
     <ClInclude Include="cButton.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="ID.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="cWindow.h">
       <Filter>Файлы заголовков\Window</Filter>
     </ClInclude>
     <ClInclude Include="Scrollbar.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="cMenuBar.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="ID.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Toolbar.h">
+      <Filter>Файлы заголовков\Window\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="cWall.h">
+      <Filter>Файлы заголовков\Window\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="cCanvas.h">
       <Filter>Файлы заголовков\Window\Detail</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,11 +71,23 @@
     <ClCompile Include="cWindow.cpp">
       <Filter>Исходные файлы\Window</Filter>
     </ClCompile>
-    <ClCompile Include="Scrollbar.cpp">
-      <Filter>Исходные файлы\Window\Detail</Filter>
-    </ClCompile>
     <ClCompile Include="PaintPro.cpp">
       <Filter>Исходные файлы\main</Filter>
+    </ClCompile>
+    <ClCompile Include="Scrollbar.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="cMenuBar.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Toolbar.cpp">
+      <Filter>Исходные файлы\Window\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="cWall.cpp">
+      <Filter>Исходные файлы\Window\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="cCanvas.cpp">
+      <Filter>Исходные файлы\Window\Detail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
